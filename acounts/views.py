@@ -311,7 +311,6 @@ def deletecustomer(request,id):
 def createorder(request,id):
     user = get_object_or_404(User,username=request.user.username)
     customers = get_list_or_404(Customer,user=user)
-    customers2 = get_list_or_404(Customer,user=user)
     products = get_list_or_404(Product,user=user)
     customerin = get_object_or_404(Customer,id=id,user=user) 
     form = OrderForm()
