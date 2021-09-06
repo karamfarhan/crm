@@ -15,7 +15,6 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from datetime import date, timedelta
 
-from django.http import JsonResponse
 
 # Create your views here.
 
@@ -228,12 +227,9 @@ def customer(request,id):
 def customerspage(request):
     customers = request.user.customer_set.all().order_by('-date_created')
 
-    #myfilters = customerfilter(request.GET, queryset=customers)
-    #customers = myfilters.qs
 
     contxt = {
         'customers':customers,
-        #'myfilters':myfilters,
         'title':'Customers',
     }
     return render(request,'acounts/customers_page.html',contxt)
@@ -313,11 +309,10 @@ def deletecustomer(request,id):
 
 @login_required(login_url='login')
 def createorder(request,id):
-    user = get_object_or_404(User,username=request.user.username) #User.objects.get(username=request.user.username)
-    customers = get_list_or_404(Customer,user=user)# Customer.objects.filter(user=user)
-    products = get_list_or_404(Product,user=user)#Product.objects.filter(user=user)
-    customerin = get_object_or_404(Customer,id=id,user=user) #Customer.objects.get(id=id)
-    #statuses = ['pending','Out for delivery','Delivered']
+    user = get_object_or_404(User,username=request.user.username)
+    customers = get_list_or_404(Customer,user=user)
+    products = get_list_or_404(Product,user=user)
+    customerin = get_object_or_404(Customer,id=id,user=user) 
     form = OrderForm()
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -341,16 +336,15 @@ def createorder(request,id):
 
 @login_required(login_url='login')
 def updateorder(request,id):
-    user = get_object_or_404(User,username=request.user.username) # User.objects.get(username=request.user.username)
-    order = get_object_or_404(Order,id=id,customer__user=user) #Order.objects.get(id=id)
-    customers = get_list_or_404(Customer,user=user)# Customer.objects.filter(user=user)
-    products = get_list_or_404(Product,user=user)#Product.objects.filter(user=user)
+    user = get_object_or_404(User,username=request.user.username)
+    order = get_object_or_404(Order,id=id,customer__user=user)
+    customers = get_list_or_404(Customer,user=user)
+    products = get_list_or_404(Product,user=user)
 
     customerin = order.customer
     productin = order.product
     statusin = order.status
     notin = order.note
-    #statuses = ['pending','Out for delivery','Delivered']
     form = OrderForm(instance=order)
     if request.method == 'POST':
         form = OrderForm(request.POST, instance=order)
@@ -367,7 +361,6 @@ def updateorder(request,id):
         'productin':productin,
         'statusin':statusin,
         'notin':notin,
-        #'statuses':statuses,
         'action':'Update Order...',
         'button':'Update',
         'title':f'Update order - {order}',
@@ -378,7 +371,7 @@ def updateorder(request,id):
 @login_required(login_url='login')
 def deleteorder(request,id):
     user=request.user
-    order = get_object_or_404(Order,id=id,customer__user=user) #Order.objects.get(id=id)
+    order = get_object_or_404(Order,id=id,customer__user=user) 
     if request.method == 'POST':
         order.delete()
         return redirect('home')
@@ -391,7 +384,7 @@ def deleteorder(request,id):
 
 @login_required(login_url='login')
 def totalorder(request):
-    user = get_object_or_404(User,username=request.user.username) #User.objects.get(username=request.user.username)
+    user = get_object_or_404(User,username=request.user.username)
     customers = Customer.objects.filter(user=user)
     products = Product.objects.filter(user=user)
     orders = Order.objects.none()
@@ -404,8 +397,6 @@ def totalorder(request):
     outfordelivery = orders.filter(status='Out for delivery').count()
 
 
-    #myfilters = totalorderfilter(request.GET,queryset=orders)
-    #orders = myfilters.qs
 
     contxt = {
         'customers':customers,
@@ -436,22 +427,8 @@ def products(request):
     
     products = request.user.product_set.all().order_by('-date_created')
 
-    #page = request.GET.get('page', 1)
-
-    #paginator = Paginator(productsall, 5)
-   # try:
-   #     products = paginator.page(page)
-   # except PageNotAnInteger:
-   #     products = paginator.page(1)
-   # except EmptyPage:
-   #     products = paginator.page(paginator.num_pages)
-    
-    #myfilters = productfilter(request.GET,queryset=products )
-    #products = myfilters.qs
-
     contxt = {
         'products':products,
-     #   'myfilters':myfilters,
         'title':'Products',
     }
 
@@ -460,7 +437,7 @@ def products(request):
 
 @login_required(login_url='login')
 def createproduct(request):
-    user = get_object_or_404(User,username=request.user.username) #User.objects.get(username=request.user.username)
+    user = get_object_or_404(User,username=request.user.username) 
     form = ProductForm(initial={'user':user})
     if request.method == 'POST':
         form = ProductForm(request.POST,initial={'user':user})
@@ -480,7 +457,7 @@ def createproduct(request):
 @login_required(login_url='login')
 def updateproduct(request,id):
     user=request.user
-    product = get_object_or_404(Product,id=id,user=user) #Product.objects.get(id=id)
+    product = get_object_or_404(Product,id=id,user=user) 
 
     form = ProductForm(instance=product)
     if request.method == 'POST':
@@ -501,7 +478,7 @@ def updateproduct(request,id):
 @login_required(login_url='login')
 def deleteproduct(request,id):
     user=request.user
-    product = get_object_or_404(Product,id=id,user=user) #Product.objects.get(id=id)
+    product = get_object_or_404(Product,id=id,user=user) 
     if request.method == 'POST':
         product.delete()
         return redirect('products')
