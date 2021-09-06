@@ -1,0 +1,83 @@
+{%  extends 'acounts/main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<form method="POST" action=""  class="container">
+    <h2 class="text-muted">{{ action }}</h2>
+    <br>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md">
+            <div class="card card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Status</th>
+                        <th>Note</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="customer"  id="id_customer" class="form-select" aria-label="Default select example">
+                                {% if customerin != None %}
+                                    <option value="{{ customerin.id }}" selected>{{ customerin }}</option>
+                                {% else %}
+                                    <option value="" selected>-----</option>
+                                {% endif %}
+                                {% for cus in customers %}
+                                {% if cus.id != customerin.id %}
+                                    <option value="{{ cus.id }}">{{cus}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="product"  id="id_product" class="form-select" aria-label="Default select example">
+                                {% if productin != None %}
+                                    <option value="{{ productin.id }}" selected>{{ productin }}</option>
+                                {% else %}
+                                    <option value="" selected>-----</option>
+                                {% endif %}
+                                {% for prod in products %}
+                                {% if prod.id != productin.id %}
+                                    <option value="{{ prod.id }}">{{prod}}</option>
+                                {% endif %}   
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>{{ form.status }} </td>
+                        <!-- <td>
+                            <select name="status"  id="id_status" class="form-select" aria-label="Default select example">
+                                {% if statusin != None %}
+                                    <option value="{{ statusin.id }}" selected >{{ statusin }}</option>
+                                {% else %}
+                                    <option value="" selected>-----</option>
+                                {% endif %}
+                                {% for stat in statuses %}
+                                {% if stat != statusin %}
+                                    <option value="{{ stat }}">{{ stat }}</option>
+                                {% endif %}   
+                                {% endfor %}
+                          
+                          </select>
+                        </td> -->
+                        
+                        <td><input value="{{ notin }}" class="form-control" type="text" placeholder="Note" aria-label="default input example" name="note" maxlength="50" id="id_note"></td>
+                    </tr>
+                </table>
+                <br>  
+            
+
+
+                <button class="btn btn-outline-success" type="submit" name="save">{{ button }}</button>
+                <br>
+                <input class="btn btn-outline-danger" type=button value="Cancel" onClick="window.history.back();return false;">
+            </div>
+        </div>
+    </div>              
+</form>
+    
+
+  
+{% endblock %}

@@ -1,0 +1,57 @@
+{%  extends 'acounts/main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<style>
+    #messages{
+			background-color: rgb(11, 116, 7);
+			color: #fff;
+			padding: 10px;
+			margin-top: 10px;
+		}
+</style>
+
+<br>
+<div class="row ">
+	<div class="col-md-5 shadow-lg p-3 mb-5 bg-light rounded container r">
+        <h5>{{ action }}</h5>
+		<hr>
+		<div class="card card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <tr>
+                    <td>
+                    <select name="user" required id="id_user" hidden >
+
+                        <option value="{{ user.id }}" selected>{{ user }}</option>
+
+                  </select>
+                    </td>
+                </tr>
+                {% for message in messages %}
+				<p id="messages">{{ message }}</p>
+			    {% endfor %}
+                <div class="mb-3">
+                    <label for="id_name" class="form-label fw-bold">Name</label>
+                    <input value="{{ c_name }}" type="text" class="form-control" id="id_name" name="name">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-bold">Email address</label>
+                    <input value="{{ c_email }}" type="email" class="form-control" id="id_email" name="email" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="id_phone" class="form-label fw-bold">Phone</label>
+                    <input value="{{ c_phone }}" type="text" class="form-control" id="id_phone" name="phone">
+                </div>
+                <div class="mb-3">
+                    <label for="id_adress" class="form-label fw-bold">Aderess</label>
+                    <input value="{{ c_adress }}"ype="text" class="form-control" id="id_adress" name="adress"> 
+                </div>
+                <button type="submit" class="btn btn-primary">{{ butoon }}</button>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

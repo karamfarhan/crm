@@ -1,0 +1,184 @@
+{%  extends 'acounts/main.html' %}
+{% load static %}
+{% block content %}
+<main>
+	<div class="container-fluid px-4">
+		<h1 class="mt-4">Dashboard</h1>
+		<div class="row">
+			<div class="col-xl-3 col-md-6">
+				<div class="card bg-success text-white mb-4">
+					<div class="card-body text-center">orders today</div>
+					<div class="card-footer d-flex align-items-center justify-content-between">
+						<h5 class="text-center">{{ order_today.count }}</h5>
+						
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-md-6">
+				<div class="card bg-warning text-white mb-4">
+					<div class="card-body">orders last 30 day</div>
+					<div class="card-footer d-flex align-items-center justify-content-between">
+						<h5 class="">{{ order_last_30day.count }}</h5>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-md-6">
+				<div class="card bg-primary text-white mb-4">
+					<div class="card-body">sell Today</div>
+					<div class="card-footer d-flex align-items-center justify-content-between">
+						<h5 class="">{{ mony_today }} <span class="text-success fw-bold">&#36;</span></h5>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-md-6">
+				<div class="card bg-danger text-white mb-4">
+					<div class="card-body">sell last 30 days</div>
+					<div class="card-footer d-flex align-items-center justify-content-between">
+						<h5 class="">{{ mony_last_30day }} <span class="text-success fw-bold">&#36;</span></h5>
+			
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xl-6">
+				<div class="card mb-4">
+					<div class="card-header">
+						<i class="fa fa-users" ></i>
+						Best 6 Customers
+						<form method="get" class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+							<div class="input-group ms-5">
+								<input class="form-control mr-sm-2" type="text" placeholder="Customer Name" aria-label="Search" name="name">
+								<button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+							</div>
+						</form>
+					</div>
+					<div class="card-body">
+						<table class="table table-sm table-hover  ">
+							<tr>
+								<th>Customer</th>
+								<th>Orders</th>
+							</tr>
+							{% for customer in customers %}
+								<tr class="fst-italic">
+									<td><a class="nav-link" href="{% url 'customer' customer.id %}">{{ customer.name }}</a></td>
+									<td>{{ customer.order_set.all.count }}</td>
+								</tr>
+							{% endfor %}
+			
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-6">
+				<div class="card mb-4">
+					<div class="card-header">
+						<i class="fas fa-chart-bar me-1"></i>
+						Last 6 order
+					</div>
+					<div class="card-body">
+						<table class="table table-sm table-hover "  >
+							<tr>
+								<th>Product</th>
+								<th>Date Orderd</th>
+								<th>Customer</th>
+								<th>Status</th>
+								<th>Update</th>
+								<th>Remove</th>
+							</tr>
+			
+							{% for order in orders %}
+								<tr class="fst-italic">
+									<td>
+										<button type="button" class="list-group-item list-group-item-action list-group-item-success " data-bs-toggle="modal" data-bs-target="#o{{order.product.id}}">
+											{{order.product.name}}
+										</button>
+										
+										<!-- Modal -->
+										<div class="modal fade" id="o{{order.product.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLabel">Product Information</h5>
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<table    class="table table-sm ">
+															<tr>
+																<th>Product</th>
+																<th>Category</th>
+																<th>Price</th>
+																<th>Description</th>
+															</tr>
+															<tr>
+																<td>{{ order.product.name }}</td>
+																<td>{{ order.product.category }}</td>
+																<td>{{ order.product.price }} $</td>
+																<td>{{ order.product.description }}</td>
+															</tr>
+														</table>                
+													</div>
+													<div class="modal-footer"></div>
+												</div>
+											</div>
+										</div>
+			
+									</td>
+									<td>{{ order.date_created|date:"m/d   h:i A" }}</td>
+									<td>
+										<button type="button" class="list-group-item list-group-item-action list-group-item-danger " data-bs-toggle="modal" data-bs-target="#c{{order.customer.id}}">
+											{{order.customer}}
+										</button>
+										
+										<!-- Modal -->
+										<div class="modal fade" id="c{{order.customer.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLabel">Customer Information</h5>
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<table class="table table-sm">
+															<tr>
+																<th>Customer</th>
+																<th>Phone</th>
+																<th>Adress</th>
+															</tr>
+															<tr>
+																<td>{{ order.customer.name }}</td>
+																<td>{{ order.customer.phone }}</td>
+																<td>{{ order.customer.adress }}</td>
+															</tr>
+														</table>                
+													</div>
+													<div class="modal-footer"></div>
+												</div>
+											</div>
+										</div>
+			
+									</td>
+			
+			
+									{% if order.status == "pending" %}
+										<td class="text-danger fw-bold">{{ order.status }} <i class="fa fa-clock" aria-hidden="true"></i></td>
+									{% elif order.status == "Out for delivery" %}
+										<td class="text-warning fw-bold">{{ order.status }} <i class="fa fa-car" aria-hidden="true"></i></td>
+									{% else %}
+										<td class="text-success fw-bold">{{ order.status }} <i class="fa fa-check" aria-hidden="true"></i></td>	
+									{% endif %}
+									<td><a class="btn btn-sm btn-info" href="{% url 'update_order' order.id %}">Update</a></td>
+									<td><a class="btn btn-sm btn-danger" href="{% url 'delete_order' order.id %}">Delete</a></td>
+								</tr>
+							{% endfor %}
+					
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+{% endblock %}

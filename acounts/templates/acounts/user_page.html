@@ -1,0 +1,86 @@
+{%  extends 'acounts/main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+	#messages{
+			background-color: rgb(11, 116, 7);
+			color: #fff;
+			padding: 10px;
+			margin-top: 10px;
+		}
+</style>
+
+<br>
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<a class="btn btn-warning" href="{% url 'home' %}"> &#8592; Back to Dashboard</a>
+			<hr>
+			<h3 style="text-align: center">Account Settings</h3>
+			<hr>
+			
+			<img class="img-thumbnail" src="{{ user.profile.profile_pic.url  }}" >
+		</div>
+	</div>
+	<div class="col-md-5 shadow-lg p-3 mb-5 bg-body rounded">
+		<div class="card-header">
+			<h5 class="card-title">You can Update Your Information</h5>
+			{% for message in messages %}
+				<p id="messages">{{ message }}</p>
+			{% endfor %}
+		</div>
+		<div class="card card-body">
+			
+			<form method="POST" action="" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{u_form|crispy}}
+				<label for="id_profile_pic"> Update Picture :</label>
+				<div class="input-group">
+					<input type="file" class="form-control" accept="image/*" name="profile_pic" id="id_profile_pic" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+				</div>
+				<br>
+				<input class="btn btn-primary" type="submit" name="Update Information" value="Update">
+			</form>
+		</div>
+		<br>
+		<p class="text-light">Forgotten your password? Update my <a href="{% url 'reset_password' %}">Password</a></p>
+	</div>
+	<div class="col">
+		<div class="col-md">
+			<div class="card text-center text-white  mb-3" id="orders-delivered">
+			  	<div class="card-header">
+			  		<h5 class="card-title">Orders Delivered</h5>
+			  	</div>
+			  	<div class="card-body">
+			    	<h3 class="card-title">{{ delivered }} </h3>
+					
+			  	</div>
+			</div>
+		</div>
+	</div>
+	<div class="col">
+		<div class="col-md">
+			<div class="card text-center text-white  mb-3" id="orders-delivered">
+			  	<div class="card-header">
+			  		<h5 class="card-title">Orders Delivered</h5>
+			  	</div>
+			  	<div class="card-body">
+			    	<h3 class="card-title">{{ delivered }} </h3>
+					
+			  	</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+{% endblock %}

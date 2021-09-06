@@ -1,0 +1,43 @@
+{%  extends 'acounts/main.html' %}
+
+{% load static %}
+{% block content %}
+<br>
+<div class="row">
+    <div class="col-md">
+        <div class="card card-body">
+            <p>Are You Sure You Want To Delete The Order "<span class="text-warning fw-bold">{{ order.product }}</span>" For The Customer "<span class="text-danger fw-bold">{{ order.customer }}</span>" ?</p>
+            <table class="table table-sm">
+                <tr>
+                    <th>Product</th>
+                    <th>Customer</th>
+                    <th>Date Orderd</th>
+                    <th>Product Price</th>
+                    <th>Status</th>
+                </tr>
+                <tr class="fst-italic">
+                    <td>{{order.product}}</td>
+                    <td>{{order.customer}}</td>
+                    <td>{{order.date_created|date:"m/d/Y   h:i A"}}</td>
+                    <td>{{ order.product.price }} <span class="text-success fw-bold">&#36;</span></td>
+                    {% if order.status == "pending" %}
+						<td class="text-danger fw-bold">{{ order.status }} <i class="fa fa-clock-o" aria-hidden="true"></i></td>
+					{% elif order.status == "Out for delivery" %}
+						<td class="text-warning fw-bold">{{ order.status }} <i class="fa fa-car" aria-hidden="true"></i></td>
+					{% else %}
+						<td class="text-success fw-bold">{{ order.status }} <i class="fa fa-check" aria-hidden="true"></i></td>	
+					{% endif %}
+                </tr>
+            </table>                    
+                <form method="POST">
+                    {% csrf_token %}
+                    <input class="btn btn-info" type=button value="Cancel" onClick="window.history.back();return false;">
+        
+                    <input class="btn btn-danger" type="submit"  value="Delete">
+                </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

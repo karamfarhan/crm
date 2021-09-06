@@ -1,0 +1,65 @@
+
+{%  extends 'acounts/main.html' %}
+{% load static %}
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Customers</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                DataTable Example
+                <a class="btn btn-outline-success " href="{% url 'create_customer' %}" type="submit">Create Customer</a>
+            </div>
+            <div class="card-body">
+                <table class="table-striped " style="background-color: rgb(250, 255, 248);" id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Orders</th>
+                            <th>Add In</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Orders</th>
+                            <th>Add In</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for customer in customers %}
+                            <tr class="fst-italic">
+                                <td><a class="nav-link" href="{% url 'customer' customer.id %}">{{ customer.name }}</td>
+                                <td>{{ customer.phone }}</td>
+                                <td>{{ customer.email }} <span class="text-success fw-bold"></span></td>
+                                <td>{{ customer.order_set.all.count }}</td>
+                                <td>{{ customer.date_created|date:"m/d/Y   h:i A"}}</td>
+                                <td><a class="btn btn-sm btn-info" href="{% url 'update_customer' customer.id %}">Update</a></td>
+                                <td><a class="btn btn-sm btn-danger" href="{% url 'delete_customer' customer.id %}">Delete</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}
+<!------------------------------------->
+<div class="container-fluid">
+    <form method="get" class="d-flex form-inline my-2 my-lg-0">
+      <a class="btn btn-outline-primary mr-sm-2" href="{% url 'create_customer' %}">Create customer</a>
+      <input class="form-control me-2" type="search" placeholder="Customer Name" aria-label="Search" name="name">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+    <h3 class="text-muted" >Customers Page</h3>
+  </div>

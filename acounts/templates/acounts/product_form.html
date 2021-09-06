@@ -1,0 +1,40 @@
+{%  extends 'acounts/main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<form method="POST" action=""  class="container">
+    <h2 class="text-muted">{{ action }}</h2>
+    <br>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md">
+            <div class="card card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Tag</th>
+
+                    </tr>
+                    <tr>
+                        <td>{{form.name}}</td>
+                        <td>{{form.price}}</td>
+                        <td>{{form.category}}</td>
+                        <td>{{form.description}}</td>
+                        <td>{{form.tag}}</td>
+                        <td hidden >{{form.user}}</td>
+                    </tr>
+                </table>
+                <br>  
+                <button class="btn btn-outline-success" type="submit" name="save">{{ button }}</button>
+                <br>
+                <input class="btn btn-outline-danger" type=button value="Cancel" onClick="window.history.back();return false;">
+            </div>
+        </div>
+    </div>              
+</form>
+
+{% endblock %}

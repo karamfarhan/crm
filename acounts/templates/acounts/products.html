@@ -1,0 +1,65 @@
+{%  extends 'acounts/main.html' %}
+{% load static %}
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Products</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                DataTable Example
+                <a class="btn btn-outline-success " href="{% url 'create_product' %}" type="submit">Create Product</a>
+            </div>
+            <div class="card-body">
+                <table class="table-striped " style="background-color: rgb(250, 255, 248);"  id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Add In</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Add In</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for prod in products %}
+                            <tr class="fst-italic">
+                                <td>{{ prod.name }}</td>
+                                <td>{{ prod.category }}</td>
+                                <td>{{ prod.price }} <span class="text-success fw-bold">&#36;</span></td>
+                                <td>{{ prod.description }}</td>
+                                <td>{{ prod.date_created|date:"m/d/Y   h:i A"}}</td>
+                                <td><a class="btn btn-sm btn-info" href="{% url 'update_product' prod.id %}">Update</a></td>
+                                <td><a class="btn btn-sm btn-danger" href="{% url 'delete_product' prod.id %}">Delete</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}
+<!--------------------------------->
+<div class="container-fluid">
+    <form method="get" class="d-flex form-inline my-2 my-lg-0">
+    <a class="btn btn-outline-primary mr-sm-2" href="{% url 'create_product' %}">Create product</a>
+    <input class="form-control me-2" type="search" placeholder="Product Name" aria-label="Search" name="name">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+  <h3 class="text-muted" >Products Page</h3>
+</div>
+

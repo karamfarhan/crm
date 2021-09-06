@@ -1,0 +1,37 @@
+{%  extends 'acounts/main.html' %}
+
+{% load static %}
+{% block content %}
+<br>
+<div class="row">
+    <div class="col-md">
+        <div class="card card-body">
+            <p>Are You Sure You Want To Delete The Customer "<span class="text-warning fw-bold">{{ customer.name }}</span>" ?</p>
+            <table class="table table-sm">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Adress</th>
+                    <th>Add in</th>
+                </tr>
+                <tr class="fst-italic">
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.email}}</td>
+                    <td>{{ customer.phone }} </td>
+                    <td>{{ customer.adress }} </td>
+                    <td>{{customer.date_created|date:"m/d/Y   h:i A"}}</td>
+                </tr>
+            </table>                    
+                <form method="POST">
+                    {% csrf_token %}
+                    <input class="btn btn-info" type=button value="Cancel" onClick="window.history.back();return false;">
+        
+                    <input class="btn btn-danger" type="submit"  value="Delete">
+                </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
