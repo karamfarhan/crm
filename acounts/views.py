@@ -17,7 +17,7 @@ from datetime import date, timedelta
 
 
 # Create your views here.
-# fouc all you 
+ 
 
 ######## user views
 
