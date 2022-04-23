@@ -100,7 +100,7 @@ def home(request):
     user = get_object_or_404(User, username=request.user.username)
 
     #################
-    # get all orders for user
+    # get all orders for user hi
     #ordersall = Order.objects.none()
     # for customer in user.customer_set.all():
     # for order in customer.order_set.all():
