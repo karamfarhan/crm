@@ -1,63 +1,65 @@
 
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.filters import SearchFilter,OrderingFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 
-from .serializers import CustomerSerializers, OrderSerializers, ProductSerializers, RegisterSerializers , UserSerializers
-from acounts.models import Customer, Product , Order , User
-
-
+from .serializers import CustomerSerializers, OrderSerializers, ProductSerializers, RegisterSerializers, UserSerializers
+from acounts.models import Customer, Product, Order, User
 
 
 @api_view(['GET'])
 def apiview(request):
 
-    api_urls ={
-        '/api/acounts/customer/pk/' : 'customer detile',
-        '/api/acounts/update_customer/pk/' : 'update customer ',
-        '/api/acounts/create_customer/' : 'create customer ',
-        '/api/acounts/delete_customer/pk/' : 'delet ecustomer ',
+    api_urls = {
+        '/api/acounts/customer/pk/': 'customer detile',
+        '/api/acounts/customers/': 'customers all detile',
+        '/api/acounts/update_customer/pk/': 'update customer ',
+        '/api/acounts/create_customer/': 'create customer ',
+        '/api/acounts/delete_customer/pk/': 'delet ecustomer ',
+
+
+        '/api/acounts/register/': 'register user',
+        '/api/acounts/user_detil/': ' user detial',
+        '/api/acounts/user_update/': ' user update ',
+        '/api/acounts/login/': 'login user ',
 
 
 
-        'api/acounts/product/pk' : 'produduct detile',
-        'api/acounts/order/pk' : 'order detile',
+
+        'api/acounts/product/pk': 'produduct detile',
+        'api/acounts/order/pk': 'order detile',
         'api/createorder': 'create order',
         'api/updateorder/<str:pk>': 'update order ',
         'api/deleteorder/<str:pk>': 'delete order',
     }
 
-
     return Response(api_urls)
-
-
 
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
-def apicustomer(request,pk):
+def apicustomer(request, pk):
     try:
         customer = Customer.objects.get(id=pk)
     except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
     user = request.user
     if customer.user != user:
-        return Response({'Error':'you canot make premation '})
+        return Response({'Error': 'you canot make premation '})
 
     if request.method == 'GET':
-    
+
         serializers = CustomerSerializers(customer)
         return Response(serializers.data)
-
 
 
 @api_view(['POST'])
@@ -68,19 +70,16 @@ def apicustomer_create(request):
     customer = Customer(user=getuser)
 
     if request.method == 'POST':
-        serializers = CustomerSerializers(customer ,data=request.data)
+        serializers = CustomerSerializers(customer, data=request.data)
         if serializers.is_valid():
             serializers.save()
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated,))
-def apicustomer_update(request,pk):
+def apicustomer_update(request, pk):
     try:
         customer = Customer.objects.get(id=pk)
     except Customer.DoesNotExist:
@@ -88,25 +87,22 @@ def apicustomer_update(request,pk):
 
     user = request.user
     if customer.user != user:
-        return Response({'Error':'you canot make premaion '})
-
+        return Response({'Error': 'you canot make premaion '})
 
     if request.method == 'PUT':
         data = {}
-        serializers = CustomerSerializers(instance=customer,data=request.data)
+        serializers = CustomerSerializers(instance=customer, data=request.data)
         if serializers.is_valid():
             serializers.save()
             #data['success'] = "customer was UPdated"
-            return Response(serializers.data) # (data=data)
-        
-        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializers.data)  # (data=data)
 
-
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])
 @permission_classes((IsAuthenticated,))
-def apicustomer_delete(request,pk):
+def apicustomer_delete(request, pk):
     try:
         customer = Customer.objects.get(id=pk)
     except Customer.DoesNotExist:
@@ -114,7 +110,7 @@ def apicustomer_delete(request,pk):
 
     user = request.user
     if customer.user != user:
-        return Response({'Error':'you canot make premaiton'})
+        return Response({'Error': 'you canot make premaiton'})
 
     if request.method == 'DELETE':
         opration = customer.delete()
@@ -124,39 +120,34 @@ def apicustomer_delete(request,pk):
         else:
             data['feild'] = "delete feild !!!!!!!!"
         return Response(data=data)
-         
-
-
 
 
 class apicustomerlist(ListAPIView):
     serializer_class = CustomerSerializers
-    pagination_class = PageNumberPagination  # http://127.0.0.1:7000/api/acounts/customers/?page=2
+    # http://127.0.0.1:7000/api/acounts/customers/?page=2
+    pagination_class = PageNumberPagination
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (SearchFilter,OrderingFilter) # http://127.0.0.1:7000/api/acounts/customers/?search=karam
-                                                    # http://127.0.0.1:7000/api/acounts/customers/?search=karam&ordering=-date_created
+    # http://127.0.0.1:7000/api/acounts/customers/?search=karam
+    filter_backends = (SearchFilter, OrderingFilter)
+    # http://127.0.0.1:7000/api/acounts/customers/?search=karam&ordering=-date_created
 
-    search_fields = ('name','adress','user__username')
-
+    search_fields = ('name', 'adress', 'user__username')
 
     def get_queryset(self):
         return Customer.objects.filter(user=self.request.user).order_by('-date_created')
-
-
-
 
 
 class apilogin(APIView):
     authentication_classes = []
     permission_classes = []
 
-    def post (self, request):
+    def post(self, request):
         data = {}
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user  =authenticate(username=username,password=password)
+        user = authenticate(username=username, password=password)
 
         if user:
             try:
@@ -166,7 +157,7 @@ class apilogin(APIView):
             data['response'] = 'succcessfully authenticate'
             data['pk'] = user.pk
             data['username'] = username
-            data['token'] =  token.key
+            data['token'] = token.key
 
         else:
             data['response'] = 'Error'
@@ -174,10 +165,9 @@ class apilogin(APIView):
         return Response(data)
 
 
-
 @api_view(['POST'])
 def apiregister(request):
-    
+
     if request.method == 'POST':
         serializers = RegisterSerializers(data=request.data)
         data = {}
@@ -193,14 +183,11 @@ def apiregister(request):
         return Response(data)
 
 
-
-
-
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def apiuser_detil(request):
-    
-    try: 
+
+    try:
         user = request.user
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -208,21 +195,18 @@ def apiuser_detil(request):
     if request.method == 'GET':
         serializers = UserSerializers(user)
         return Response(serializers.data)
-    
-
-
 
 
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated,))
 def apiuser_update(request):
 
-    try: 
+    try:
         user = request.user
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method  == 'PUT':
+    if request.method == 'PUT':
         serializers = UserSerializers(instance=user, data=request.data)
         if serializers.is_valid():
             serializers.save()
@@ -230,33 +214,8 @@ def apiuser_update(request):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @api_view(['GET'])
-def apipruduct(request,pk):
+def apipruduct(request, pk):
     try:
         product = Product.objects.get(id=pk)
     except Product.DoesNotExist:
@@ -268,7 +227,7 @@ def apipruduct(request,pk):
 
 
 @api_view(['GET'])
-def apiorder(request,pk):
+def apiorder(request, pk):
     try:
         order = Order.objects.get(id=pk)
     except Order.DoesNotExist:
@@ -280,11 +239,6 @@ def apiorder(request,pk):
         return Response(serializers.data)
 
 
-
-
-
-
-
 @api_view(['POST'])
 def apicreateorder(request):
     serializers = OrderSerializers(data=request.data)
@@ -292,16 +246,18 @@ def apicreateorder(request):
         serializers.save()
     return Response(serializers.data)
 
+
 @api_view(['POST'])
-def apiupdateorder(request,pk):
+def apiupdateorder(request, pk):
     order = Order.objects.get(id=pk)
     serializers = OrderSerializers(instance=order, data=request.data)
     if serializers.is_valid():
         serializers.save()
     return Response(serializers.data)
 
+
 @api_view(['DELETE'])
-def apideleteorder(request,pk):
+def apideleteorder(request, pk):
     order = Order.objects.get(id=pk)
     order.delete()
     return Response("deleted is TRUE")
