@@ -18,3 +18,6 @@ OPEN TERMINAL :
 7 - make superuser and give it username and password by running (python manage.py createsuperuser).<br />
 9 - run the project by running (python manage.py runserver).<br />
 10 - open your browser and go to the link (localhost:8000).<br />
+
+
+TO SEE THE DEMO CLICK  [CRM DEMO](https://mylitilecrmapp.herokuapp.com/)
