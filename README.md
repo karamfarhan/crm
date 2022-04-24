@@ -19,5 +19,10 @@ OPEN TERMINAL :
 9 - run the project by running (python manage.py runserver).<br />
 10 - open your browser and go to the link (localhost:8000).<br />
 
+11 - do not forget to put your email and password in SMTP.Configuration<br />
+   EMAIL_HOST_USER =  delete this and put your Email<br />
+   EMAIL_HOST_PASSWORD = delete this and put your Email Password<br />
+
+
 
 TO SEE THE DEMO CLICK  [CRM DEMO](https://mylitilecrmapp.herokuapp.com/)
