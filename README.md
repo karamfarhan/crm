@@ -8,7 +8,7 @@ TO RUN IT :
 OPEN TERMINAL :
 
 2 - create venv (python -m venv venv_name).<br />
-3 - activate you venv :
+3 - activate you venv :<br />
    windows (venv_name\scripts\activate.bat).<br />
    linux,mac (source venv_name/bin/activate).<br />
    
